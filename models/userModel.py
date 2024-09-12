@@ -1,5 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric, Index
 
 from connection.connection import Base
 
@@ -23,3 +22,8 @@ class UserDataModel(Base):
     CEP= Column(String)
     numero_moradores= Column(Numeric)
     classification = Column(Integer, nullable=True)
+
+    # Definir o índice na coluna classification
+    __table_args__ = (
+        Index('idx_classification', 'classification'),
+    )
