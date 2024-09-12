@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # URL de conexão com o PostgreSQL
-DATABASE_URL = "postgresql://iabd:4321@localhost:5436/startdb"
+DATABASE_URL = "postgresql://final:final@localhost:5436/startdb"
 
 # Criação do engine e sessão com SQLAlchemy
 engine = create_engine(DATABASE_URL)

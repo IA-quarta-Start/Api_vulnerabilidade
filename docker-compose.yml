@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_DB=startdb
-      - POSTGRES_USER=iabd
-      - POSTGRES_PASSWORD=4321
+      - POSTGRES_USER=final
+      - POSTGRES_PASSWORD=final
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
