@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from actions.action_user import UserAction, \
     get_users_by_name, delete_user_by_id, get_users_by_classification_paginated
 
+
 from schemas import schemas_user, schemas
 from actions import action_user, actions
 from models import models
@@ -37,6 +38,12 @@ def get_db():
     finally:
         db.close()
 
+@app.post("/login")
+def login(user: schemas.Userlogin, db: Session = Depends(get_db)):
+    db_user = actions.authenticate_user(db, user.email, user.password)
+    if not db_user:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    return {"message": "Login successful", "user": db_user}
 
 @app.post("/admin/", response_model=schemas.User)
 def create_admin(user: schemas.UserCreate, db: Session = Depends(get_db)):
