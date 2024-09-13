@@ -4,8 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from actions.action_user import UserAction, \
-    get_users_by_name, delete_user_by_id, get_users_by_classification_paginated
-
+    get_users_by_name, delete_user_by_id, get_users_by_classification_paginated, get_recent_users
 
 from schemas import schemas_user, schemas
 from actions import action_user, actions
@@ -80,6 +79,14 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.get("/users/recent")
+def get_recent_users_route(limit: int = 10, db: Session = Depends(get_db)):
+    users = get_recent_users(db=db, limit=limit)
+
+    if "detail" in users:
+        raise HTTPException(status_code=404, detail=users["detail"])
+
+    return users
 
 @app.get("/users/{name}")
 def read_users(name: str, db: Session = Depends(get_db)):
@@ -104,7 +111,6 @@ def filter_users_by_vulnerability(is_vulnerable: bool, page: int = 1, page_size:
         raise HTTPException(status_code=404, detail=result["detail"])
 
     return result
-
 
 @app.delete("/users/{user_id}")
 def remove_user(user_id: int, db: Session = Depends(get_db)):

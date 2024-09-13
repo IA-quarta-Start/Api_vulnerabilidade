@@ -74,6 +74,25 @@ def delete_user_by_id(db: Session, user_id: int):
         db.rollback()
         return {"detail": str(e)}
 
+def get_recent_users(db: Session, limit: int = 10):
+    try:
+        # Busca os usuários ordenados pelo ID em ordem decrescente (últimos registros primeiro)
+        users = db.query(UserDataModel).order_by(UserDataModel.id.desc()).limit(limit).all()
+
+        if not users:
+            return {"detail": "Nenhum usuário encontrado"}
+
+        # Converte os resultados para uma lista de dicionários, se necessário
+        user_list = [user.__dict__ for user in users]
+
+        # Remove o campo '_sa_instance_state' que é adicionado automaticamente pelo SQLAlchemy
+        for user in user_list:
+            user.pop('_sa_instance_state', None)
+
+        return user_list
+    except Exception as e:
+        return {"detail": str(e)}
+
 
 def get_users_by_classification_paginated(db: Session, is_vulnerable: bool, page: int = 1, page_size: int = 10):
     try:
